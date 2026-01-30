@@ -4,18 +4,29 @@ AI 에이전트들(Claude Code, Gemini CLI, OpenCode 등)이 파일 기반으로
 
 ## 📦 설치
 
-### 방법 1: Git Clone
+### CLI 도구 설치 (권장)
+```bash
+pip install git+https://github.com/loboking/agents-template.git
+```
+
+### 빠른 시작
+```bash
+cd your-project
+agents init              # .agents 폴더 자동 생성
+agents start             # 터미널 3개 자동 열기 (claude, gemini, opencode)
+```
+
+---
+
+### 수동 설치 (CLI 없이)
+
+#### 방법 1: Git Clone
 ```bash
 cd your-project
 git clone https://github.com/loboking/agents-template .agents
 ```
 
-### 방법 2: 수동 복사
-```bash
-cp -r /path/to/agents-template /your-project/.agents
-```
-
-### 방법 3: degit (권장)
+#### 방법 2: degit
 ```bash
 npx degit loboking/agents-template .agents
 ```
