@@ -14,6 +14,7 @@ import os
 import sys
 import subprocess
 import yaml
+import shutil
 import click
 from pathlib import Path
 
@@ -147,6 +148,56 @@ def detect_and_update_project(project_file):
     click.echo(f"🔍 Detected: {project_name} ({language})")
 
 
+def check_dependencies(agents):
+    """Check if agent CLI tools are installed"""
+    click.echo("🔍 Verifying agent team assembly...")
+    
+    missing = []
+    
+    for agent in agents:
+        if agent not in DEFAULT_AGENTS:
+            continue
+            
+        cmd = DEFAULT_AGENTS[agent]["cli_command"]
+        name = DEFAULT_AGENTS[agent]["name"]
+        
+        if not shutil.which(cmd):
+            missing.append(agent)
+            click.echo(f"  ❌ {name} ({cmd}) is missing.")
+        else:
+            click.echo(f"  ✅ {name} is ready.")
+            
+    if missing:
+        click.echo("\n🛠️  Attempting to install missing agents...")
+        for agent in missing:
+            install_agent(agent)
+
+def install_agent(agent):
+    name = DEFAULT_AGENTS[agent]["name"]
+    click.echo(f"  Installing {name}...")
+    
+    cmd = []
+    if agent == "claude":
+        cmd = ["npm", "install", "-g", "@anthropic-ai/claude-code"]
+    elif agent == "gemini":
+        cmd = ["npm", "install", "-g", "@google/gemini-cli"]
+    elif agent == "opencode":
+        # Check if pipx is available, else use pip
+        if shutil.which("pipx"):
+             cmd = ["pipx", "install", "opencode"]
+        else:
+             cmd = [sys.executable, "-m", "pip", "install", "opencode"]
+             
+    if cmd:
+        try:
+            subprocess.run(cmd, check=True)
+            click.echo(f"  ✅ {name} installed successfully!")
+        except subprocess.CalledProcessError:
+            click.echo(f"  ❌ Failed to install {name}. Please install manually.")
+    else:
+        click.echo(f"  ❓ No installation recipe for {name}.")
+
+
 @cli.command()
 @click.argument("agents", nargs=-1)
 @click.option("--tmux/--no-tmux", default=True, help="Use tmux for terminals (default: True)")
@@ -160,6 +211,9 @@ def start(agents, tmux):
     """
     if not agents:
         agents = list(DEFAULT_AGENTS.keys())
+    
+    # Check dependencies first
+    check_dependencies(agents)
     
     click.echo(f"🚀 Starting agents: {', '.join(agents)}")
     
@@ -228,18 +282,22 @@ def start_with_tmux(agents):
             # First pane (already created)
             subprocess.run([
                 "tmux", "send-keys", "-t", f"{session_name}:0",
-                f"cd {cwd} && {cmd}", "Enter"
+                f"cd '{cwd}' && {cmd}", "Enter"
             ])
         else:
             # Create new pane
             subprocess.run(["tmux", "split-window", "-t", session_name, "-h"])
             subprocess.run([
                 "tmux", "send-keys", "-t", session_name,
-                f"cd {cwd} && {cmd}", "Enter"
+                f"cd '{cwd}' && {cmd}", "Enter"
             ])
     
     # Attach to session
-    click.echo(f"\n📺 Attach to tmux session: tmux attach -t {session_name}")
+    
+    # Attach to session
+    click.echo(f"📺 Attaching to tmux session: {session_name}")
+    # Use execvp to replace current process with tmux attach
+    os.execvp("tmux", ["tmux", "attach", "-t", session_name])
 
 
 @cli.command()
