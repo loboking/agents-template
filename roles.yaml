@@ -79,6 +79,24 @@ agents:
       - 간단한 코드 수정
       - 반복적인 작업
       - 빠른 프로토타이핑
+    
+  zai:
+    name: Zai
+    model: zai
+    cli_command: zai
+    capabilities:
+      - coding
+    speed: fast
+    cost: low
+    
+  oh-my-opencode:
+    name: Oh My OpenCode
+    model: oh-my-opencode
+    cli_command: oh-my-opencode
+    capabilities:
+      - coding
+    speed: fast
+    cost: low
 
 # 오케스트레이터
 orchestrator:
