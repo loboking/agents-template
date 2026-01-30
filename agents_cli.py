@@ -149,14 +149,14 @@ def detect_and_update_project(project_file):
 
 @cli.command()
 @click.argument("agents", nargs=-1)
-@click.option("--tmux", is_flag=True, help="Use tmux for terminals")
+@click.option("--tmux/--no-tmux", default=True, help="Use tmux for terminals (default: True)")
 def start(agents, tmux):
     """Start agent terminals
     
     Examples:
-        agents start              # Start all agents
+        agents start              # Start all agents with tmux
         agents start claude       # Start only Claude
-        agents start claude gemini # Start Claude and Gemini
+        agents start --no-tmux    # Use Terminal.app instead
     """
     if not agents:
         agents = list(DEFAULT_AGENTS.keys())
@@ -169,6 +169,15 @@ def start(agents, tmux):
         return
     
     if tmux:
+        # Check if tmux is installed
+        result = subprocess.run(["which", "tmux"], capture_output=True)
+        if result.returncode != 0:
+            click.echo("📦 tmux not found. Installing...")
+            install_result = subprocess.run(["brew", "install", "tmux"], capture_output=False)
+            if install_result.returncode != 0:
+                click.echo(click.style("❌ Failed to install tmux. Please install manually: brew install tmux", fg="red"))
+                return
+            click.echo(click.style("✅ tmux installed!", fg="green"))
         start_with_tmux(agents)
     else:
         start_with_osascript(agents)
