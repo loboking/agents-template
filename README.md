@@ -7,7 +7,7 @@ AI 에이전트들(Claude Code, Gemini CLI, OpenCode 등)이 파일 기반으로
 ### 방법 1: Git Clone
 ```bash
 cd your-project
-git clone https://github.com/YOUR_USERNAME/agents-template .agents
+git clone https://github.com/loboking/agents-template .agents
 ```
 
 ### 방법 2: 수동 복사
@@ -17,7 +17,7 @@ cp -r /path/to/agents-template /your-project/.agents
 
 ### 방법 3: degit (권장)
 ```bash
-npx degit YOUR_USERNAME/agents-template .agents
+npx degit loboking/agents-template .agents
 ```
 
 ## 🚀 초기 설정
