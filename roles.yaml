@@ -1,0 +1,91 @@
+# Multi-Agent Roles Configuration
+
+# 역할 카테고리 (고정)
+roles:
+  primary_coder:
+    description: 핵심 코딩 담당
+    current: claude
+    fallback: [opencode, gemini]
+    
+  researcher:
+    description: 조사/검색 담당
+    current: gemini
+    fallback: [claude]
+    
+  reviewer:
+    description: 코드 리뷰 담당
+    current: claude
+    fallback: [gemini]
+    
+  utility:
+    description: 보조 작업
+    current: opencode
+    fallback: [any]
+
+# 에이전트 정의 (동적 추가 가능)
+agents:
+  claude:
+    name: Claude Code
+    model: claude-3.5-sonnet
+    cli_command: claude
+    capabilities:
+      - coding
+      - review
+      - design
+      - analysis
+      - debugging
+      - refactoring
+    context_limit: 200k
+    speed: medium
+    cost: high
+    best_for:
+      - 복잡한 로직 구현
+      - 코드 리뷰
+      - 아키텍처 설계
+      - 버그 수정
+    
+  gemini:
+    name: Gemini CLI
+    model: gemini-3.0-preview
+    cli_command: gemini
+    capabilities:
+      - research
+      - multimodal
+      - brainstorm
+      - coding
+      - web_search
+      - long_context
+    context_limit: 1M+
+    speed: fast
+    cost: medium
+    best_for:
+      - 최신 라이브러리 조사
+      - 이미지/다이어그램 분석
+      - 브레인스토밍
+      - 대규모 코드베이스 분석
+    
+  opencode:
+    name: OpenCode
+    model: glm-4.7
+    cli_command: opencode
+    capabilities:
+      - coding
+      - refactor
+      - simple_tasks
+    context_limit: 128k
+    speed: fast
+    cost: low
+    best_for:
+      - 간단한 코드 수정
+      - 반복적인 작업
+      - 빠른 프로토타이핑
+
+# 오케스트레이터
+orchestrator:
+  name: Antigravity
+  role: 작업 분석, 분배, 통합, 최종 실행
+  capabilities:
+    - file_access
+    - browser_control
+    - image_generation
+    - command_execution

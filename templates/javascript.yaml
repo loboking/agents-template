@@ -1,0 +1,36 @@
+# JavaScript/TypeScript Project Template
+
+project:
+  name: "{{project_name}}"
+  type: new
+  language: javascript  # or typescript
+  version: "ES2023"
+  
+  # 코드 스타일
+  style:
+    formatter: prettier
+    linter: eslint
+    type_checker: null  # tsc for TypeScript
+    
+  # 프로젝트 구조
+  structure:
+    root: "{{project_root}}"
+    src: "{{project_root}}/src"
+    tests: "{{project_root}}/tests"
+    docs: "{{project_root}}/docs"
+    
+  # 규칙
+  conventions:
+    naming: camelCase
+    max_line_length: 100
+    indent: "2 spaces"
+    semicolons: true
+    
+  # 테스트
+  testing:
+    framework: jest  # or vitest
+    command: "npm test"
+    coverage: "npm run test:coverage"
+    
+  # 패키지 관리
+  package_manager: npm  # or yarn, pnpm

@@ -1,0 +1,33 @@
+# Python Project Template
+
+project:
+  name: "{{project_name}}"
+  type: new
+  language: python
+  version: "3.11"
+  
+  # 코드 스타일
+  style:
+    formatter: black
+    linter: ruff
+    type_checker: mypy
+    
+  # 프로젝트 구조
+  structure:
+    root: "{{project_root}}"
+    src: "{{project_root}}/src"
+    tests: "{{project_root}}/tests"
+    docs: "{{project_root}}/docs"
+    
+  # 규칙
+  conventions:
+    naming: snake_case
+    docstring: google
+    max_line_length: 100
+    indent: "4 spaces"
+    
+  # 테스트
+  testing:
+    framework: pytest
+    command: "pytest -v"
+    coverage: "pytest --cov"
